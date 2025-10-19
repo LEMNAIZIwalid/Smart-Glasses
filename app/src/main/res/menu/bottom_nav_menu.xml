@@ -2,24 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/nav_livestream"
+        android:icon="@drawable/ic_livestream_50"
+        android:title="Live" />
+
+    <item
+        android:id="@+id/nav_statics"
+        android:icon="@drawable/ic_graph_50"
+        android:title="Stats" />
+
+    <item
         android:id="@+id/nav_historique"
         android:icon="@drawable/ic_databackup_50"
         android:title="Home" />
 
     <item
-        android:id="@+id/nav_livestream"
-        android:icon="@drawable/ic_livestream_50"
-        android:title="Search" />
-
-    <item
-        android:id="@+id/nav_statics"
-        android:icon="@drawable/ic_graph_50"
-        android:title="Add" />
-
-    <item
         android:id="@+id/nav_notifications"
         android:icon="@drawable/ic_notification_50"
-        android:title="Notifications" />
+        android:title="Notif" />
 
     <item
         android:id="@+id/nav_profile"

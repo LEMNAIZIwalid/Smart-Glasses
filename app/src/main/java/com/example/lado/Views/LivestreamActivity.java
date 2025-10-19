@@ -1,31 +1,31 @@
 package com.example.lado.Views;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.lado.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity {
+public class LivestreamActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_livestream);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
-        bottomNavigationView.setSelectedItemId(R.id.nav_historique);
+        bottomNavigationView.setSelectedItemId(R.id.nav_livestream);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_historique) {
-                return true;
-            } else if (id == R.id.nav_livestream) {
-                startActivity(new Intent(this, LivestreamActivity.class));
+                startActivity(new Intent(this, HomeActivity.class));
                 super.onPause();
                 overridePendingTransition(0, 0);
                 finish();
+                return true;
+            } else if (id == R.id.nav_livestream) {
                 return true;
             } else if (id == R.id.nav_statics) {
                 startActivity(new Intent(this, StaticsActivity.class));

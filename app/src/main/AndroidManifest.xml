@@ -13,7 +13,7 @@
         android:theme="@style/Theme.LADO"
         tools:targetApi="31">
 
-        <!-- Écran principal -->
+        <!-- 🏁 Page principale au démarrage -->
         <activity
             android:name=".Views.MainActivity"
             android:exported="true"
@@ -25,24 +25,55 @@
             </intent-filter>
         </activity>
 
-        <!--activité : Login -->
+        <!-- 🔐 Page Login -->
         <activity
             android:name=".Views.LoginActivity"
             android:exported="false"
             android:label="Login"
             android:theme="@style/Theme.LADO" />
 
-        <!--Page Home -->
+        <!-- 🏠 Page Home -->
         <activity
             android:name=".Views.HomeActivity"
             android:exported="false"
+            android:label="Home"
             android:theme="@style/Theme.LADO" />
 
-        <!--activité : Sign in -->
+        <!-- 🧾 Page Sign In -->
         <activity
             android:name=".Views.SignInActivity"
             android:exported="false"
+            android:label="Sign In"
             android:theme="@style/Theme.LADO" />
+
+        <!-- 🎥 Page Livestream -->
+        <activity
+            android:name=".Views.LivestreamActivity"
+            android:exported="false"
+            android:label="Livestream"
+            android:theme="@style/Theme.LADO" />
+
+        <!-- 📊 Page Statics -->
+        <activity
+            android:name=".Views.StaticsActivity"
+            android:exported="false"
+            android:label="Statistics"
+            android:theme="@style/Theme.LADO" />
+
+        <!-- 🔔 Page Notifications -->
+        <activity
+            android:name=".Views.NotificationsActivity"
+            android:exported="false"
+            android:label="Notifications"
+            android:theme="@style/Theme.LADO" />
+
+        <!-- 👤 Page Profile -->
+        <activity
+            android:name=".Views.ProfileActivity"
+            android:exported="false"
+            android:label="Profile"
+            android:theme="@style/Theme.LADO" />
+
     </application>
 
 </manifest>
