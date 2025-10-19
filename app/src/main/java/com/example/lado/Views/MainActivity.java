@@ -1,24 +1,27 @@
 package com.example.lado.Views;
 
-
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.widget.ImageView;
 import com.example.lado.R;
-import com.example.lado.Controller.MainController;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView textBonjour;
-    private MainController controller;
+    private ImageView imageBonjour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textBonjour = findViewById(R.id.textBonjour);
-        controller = new MainController(this);
-        controller.afficherMessage(textBonjour);
+        imageBonjour = findViewById(R.id.imageBonjour);
+
+        // Lorsqu'on clique sur l'image → ouvre LoginActivity
+        imageBonjour.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 }

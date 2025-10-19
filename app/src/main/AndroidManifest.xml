@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LADO"
         tools:targetApi="31">
+
+        <!-- Écran principal -->
         <activity
             android:name=".Views.MainActivity"
             android:exported="true"
@@ -19,10 +21,28 @@
             android:theme="@style/Theme.LADO">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--activité : Login -->
+        <activity
+            android:name=".Views.LoginActivity"
+            android:exported="false"
+            android:label="Login"
+            android:theme="@style/Theme.LADO" />
+
+        <!--Page Home -->
+        <activity
+            android:name=".Views.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LADO" />
+
+        <!--activité : Sign in -->
+        <activity
+            android:name=".Views.SignInActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LADO" />
     </application>
 
 </manifest>
