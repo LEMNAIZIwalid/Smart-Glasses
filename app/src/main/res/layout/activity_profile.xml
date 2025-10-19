@@ -6,21 +6,111 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center">
+        android:padding="24dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="👤 Page Profil"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#14213D" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#14213D"
+                android:layout_marginTop="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#14213D"
+                android:layout_marginTop="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#14213D"
+                android:layout_marginTop="16dp" />
+
+            <!-- Image circulaire du profil -->
+            <FrameLayout
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/profile_border"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/imageProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/profile_circle_mask"
+                    android:src="@drawable/userimage_cercle" />
+            </FrameLayout>
+
+            <!-- Nom d'utilisateur -->
+            <TextView
+                android:id="@+id/textUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#14213D"
+                android:layout_marginTop="16dp" />
+
+            <!-- Boutons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="24dp">
+
+                <Button
+                    android:id="@+id/btnModifyProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Modify your profile"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:background="@drawable/btn_dark_style"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/btnChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Change your password"
+                    android:textColor="#14213D"
+                    android:textStyle="bold"
+                    android:background="@drawable/btn_light_style"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Log out"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:background="@drawable/btn_orange_style" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Barre de navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
