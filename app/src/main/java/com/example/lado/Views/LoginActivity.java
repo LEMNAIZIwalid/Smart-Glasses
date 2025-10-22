@@ -14,7 +14,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private Button btnLogin;
-    private TextView textSignIn;  // 🔹 Lien vers Sign In
+    private TextView textSignIn, textForgot; // 🔹 Lien vers Sign In & Forgot Password
     private LoginController controller;
 
     @Override
@@ -22,22 +22,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // 🔸 Liaison des vues
+        // 🔸 Liaison des vues XML
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        textSignIn = findViewById(R.id.textSignIn); // 🔹 Assurez-vous que ce TextView existe dans le XML
+        textSignIn = findViewById(R.id.textSignIn);
+        textForgot = findViewById(R.id.textForgot); // 🔹 Nouveau lien "Forgot password?"
 
         // 🔸 Initialisation du contrôleur
         controller = new LoginController(this);
 
-        // 🔸 Action sur le bouton Login
+        // 🟢 Action sur le bouton "Login"
         btnLogin.setOnClickListener(v -> controller.verifierLogin(editUsername, editPassword));
 
-        // 🔸 Action sur le texte "Sign In"
+        // 🟡 Action sur le texte "Sign In"
         textSignIn.setOnClickListener(v -> {
-            // Redirige vers la page SignInActivity
             Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
+            startActivity(intent);
+        });
+
+        // 🔴 Action sur le texte "Forgot password?"
+        textForgot.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, VerifyUserActivity.class);
             startActivity(intent);
         });
     }

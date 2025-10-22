@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="28dp"
+    android:background="#FFFFFF">
+
+    <!-- 🔹 Logo -->
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/lado_logo"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Logo LADO" />
+
+    <!-- 🟩 Label Email -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email adresse"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="6dp" />
+
+    <!-- 🟢 Champ Email -->
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:hint="exemple@email.com"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:layout_marginBottom="20dp" />
+
+    <!-- 🟩 Label Numéro de téléphone -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mobile phone"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="6dp" />
+
+    <!-- 🟢 Champ Téléphone -->
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:hint="Ex: +212612345678"
+        android:inputType="phone"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:layout_marginBottom="30dp" />
+
+    <!-- 🔘 Boutons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:gravity="center">
+
+        <!-- 🔴 Bouton Annuler -->
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/btn_cancel_background"
+            android:layout_marginEnd="8dp" />
+
+        <!-- 🟢 Bouton Valider -->
+        <Button
+            android:id="@+id/buttonVerify"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Submit"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@drawable/btn_validate_background"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</LinearLayout>
