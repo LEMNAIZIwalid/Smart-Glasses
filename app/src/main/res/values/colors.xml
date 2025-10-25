@@ -7,4 +7,24 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#14213D</color> <!-- Bleu marine -->
+    <color name="colorAccent">#77B7A3</color>  <!-- Vert doux -->
+    <color name="colorBackground">#FFFFFF</color> <!-- Blanc -->
+    <color name="colorTextDark">#333333</color>
+    <color name="colorTextLight">#999999</color>
+
+    <!-- 🟡 Couleurs spécifiques -->
+    <color name="gold">#FCA311</color>
+    <color name="navy_blue">#14213D</color>
+    <color name="teal">#77B7A3</color>
+    <color name="errorRed">#FF4C4C</color>
+    <color name="successGreen">#4CAF50</color>
+
+    <!-- 🔵 Onglets Notifications -->
+    <color name="tab_default">#FFD700</color> <!-- Doré -->
+    <color name="tab_active">#14213D</color>   <!-- Bleu marine -->
+
+    <!-- 🔹 Navigation -->
+    <color name="bottom_nav_selected">#14213D</color>
+    <color name="bottom_nav_unselected">#C0C0C0</color>
 </resources>

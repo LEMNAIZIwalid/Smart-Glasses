@@ -6,11 +6,15 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.Button;
 import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.lado.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -19,12 +23,21 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView imageProfile;
     private Uri imageUri;
 
+    private Button btnChangePassword; // 🔹 Ajout du bouton
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         imageProfile = findViewById(R.id.imageProfile);
+        btnChangePassword = findViewById(R.id.btnChangePassword); // ✅ Récupère ton bouton
+
+        // --- 🔹 Redirection vers ResetPasswordActivity ---
+        btnChangePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, ResetPasswordActivity.class);
+            startActivity(intent);
+        });
 
         // --- Cliquer sur la photo ouvre le menu ---
         imageProfile.setOnClickListener(v -> showImageOptionsDialog());
