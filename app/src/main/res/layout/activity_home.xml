@@ -1,38 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#FFD966">
 
-    <!-- Partie centrale -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Logo LADO -->
+    <ImageView
+        android:id="@+id/logoLadoTop"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/lado_logo"
+        android:contentDescription="Logo LADO"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <!-- ScrollView pour le contenu -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center">
+        app:layout_constraintTop_toBottomOf="@id/logoLadoTop"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textWelcome"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bienvenue dans la page d'accueil 🎉"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#14213D" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <!-- ✅ Barre de navigation -->
+            <!-- 👋 Message de bienvenue -->
+            <TextView
+                android:id="@+id/textWelcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👋 Bonjour Walid"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#14213D"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- 🔋 Statut lunettes -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:background="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔋 Batterie : 82%     📶 Connecté"
+                        android:textColor="#14213D"
+                        android:textStyle="bold"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dernière synchro : il y a 5 min"
+                        android:textColor="#14213D"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 🔔 Dernières alertes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔔 Dernières alertes"
+                android:textColor="#14213D"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:background="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="- Obstacle détecté à 2m droite (14:32)"
+                        android:textColor="#FF4D4F"
+                        android:textSize="15sp"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="- Batterie faible (hier 22:10)"
+                        android:textColor="#FF4D4F"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 💡 Astuce du jour -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:background="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💡 Astuce du jour"
+                        android:textColor="#14213D"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:id="@+id/textTip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Évitez les reflets pour une meilleure détection."
+                        android:textColor="#14213D"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ✅ Bottom Navigation fixe en bas -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="#FFFFFF"
-        app:itemIconTint="@color/nav_item_color_selector"
-        app:itemTextColor="@color/nav_item_color_selector"
-        app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#14213D"
+        app:itemIconTint="@color/gold"
+        app:itemTextColor="@color/gold"
+        app:menu="@menu/bottom_nav_menu"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

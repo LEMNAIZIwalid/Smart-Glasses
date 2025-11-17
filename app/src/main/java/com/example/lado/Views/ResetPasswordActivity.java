@@ -1,10 +1,10 @@
 package com.example.lado.Views;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +14,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lado.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
@@ -23,26 +27,49 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private ImageView iconToggleNewPassword, iconToggleConfirmPassword;
     private Button buttonConfirmReset;
 
-    // ✅ Rule icons & texts
+    // Password rule icons
     private ImageView iconLength, iconUpper, iconLower, iconNumber, iconSymbol;
     private TextView textRuleLength, textRuleUpper, textRuleLower, textRuleNumber, textRuleSymbol;
 
     private boolean isNewPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
 
+    // Firebase
+    private FirebaseAuth auth;
+    private FirebaseUser currentUser;
+    private DatabaseReference usersRef;
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        // 🔹 Inputs
+        // 🔹 Initialisation Firebase
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+
+        if (currentUser == null) {
+            Toast.makeText(this, "Error: No user logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // 🔹 Récupération du userId depuis SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userId = prefs.getString("userId", null);
+
+        // 🔹 Référence Realtime Database
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        // 🔹 Initialisation vues
         editTextNewPassword = findViewById(R.id.editTextNewPassword);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         iconToggleNewPassword = findViewById(R.id.iconToggleNewPassword);
         iconToggleConfirmPassword = findViewById(R.id.iconToggleConfirmPassword);
         buttonConfirmReset = findViewById(R.id.buttonConfirmReset);
 
-        // 🔹 Rules views
+        // Rule components
         iconLength = findViewById(R.id.iconLength);
         iconUpper = findViewById(R.id.iconUpper);
         iconLower = findViewById(R.id.iconLower);
@@ -55,46 +82,35 @@ public class ResetPasswordActivity extends AppCompatActivity {
         textRuleNumber = findViewById(R.id.textRuleNumber);
         textRuleSymbol = findViewById(R.id.textRuleSymbol);
 
-        // 👁 Toggle visibility listeners
+        // 🔹 Toggle visibilité
         iconToggleNewPassword.setOnClickListener(v ->
                 togglePasswordVisibility(editTextNewPassword, iconToggleNewPassword, true));
+
         iconToggleConfirmPassword.setOnClickListener(v ->
                 togglePasswordVisibility(editTextConfirmPassword, iconToggleConfirmPassword, false));
 
-        // 🧠 Listen password typing
+        // 🔹 Règles mot de passe en temps réel
         editTextNewPassword.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updatePasswordRules(s.toString());
             }
         });
 
-        // ✅ Confirm button click
-        buttonConfirmReset.setOnClickListener(v -> validatePasswords());
+        // 🔹 Bouton confirmation
+        buttonConfirmReset.setOnClickListener(v -> validateAndChangePassword());
     }
 
-    // 🧩 Update checklist rules live
     private void updatePasswordRules(String password) {
-        // 8+ characters
         setRuleState(password.length() >= 8, iconLength, textRuleLength);
-
-        // Uppercase
         setRuleState(Pattern.compile(".*[A-Z].*").matcher(password).find(), iconUpper, textRuleUpper);
-
-        // Lowercase
         setRuleState(Pattern.compile(".*[a-z].*").matcher(password).find(), iconLower, textRuleLower);
-
-        // Number
         setRuleState(Pattern.compile(".*[0-9].*").matcher(password).find(), iconNumber, textRuleNumber);
-
-        // Special symbol
         setRuleState(Pattern.compile(".*[@.,;_].*").matcher(password).find(), iconSymbol, textRuleSymbol);
     }
 
-    // 🟢 Change rule color + icon dynamically
     private void setRuleState(boolean valid, ImageView icon, TextView text) {
         if (valid) {
             icon.setImageResource(R.drawable.ic_check_48);
@@ -105,8 +121,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
     }
 
-    // ✅ Validation on submit
-    private void validatePasswords() {
+    private void validateAndChangePassword() {
         String newPassword = editTextNewPassword.getText().toString().trim();
         String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
@@ -115,42 +130,67 @@ public class ResetPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        if (!isValidPassword(newPassword)) {
-            showToast("Password must meet all requirements");
-            return;
-        }
-
         if (!newPassword.equals(confirmPassword)) {
             showToast("Passwords do not match");
             return;
         }
 
-        showToast("Password successfully reset!");
-        finish();
+        if (!isValidPassword(newPassword)) {
+            showToast("Password does not meet requirements");
+            return;
+        }
+
+        // 🔹 Mise à jour mot de passe dans Firebase Auth
+        currentUser.updatePassword(newPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // 🔹 Mise à jour mot de passe dans Realtime Database
+                        if (userId != null) {
+                            usersRef.child(userId).child("password").setValue(newPassword)
+                                    .addOnCompleteListener(dbTask -> {
+                                        if (dbTask.isSuccessful()) {
+                                            showToast("Password changed successfully in Auth and Database!");
+                                            finish();
+                                        } else {
+                                            showToast("Password updated in Auth but failed in Database: " + dbTask.getException().getMessage());
+                                        }
+                                    });
+                        } else {
+                            showToast("User ID not found. Password changed in Auth only.");
+                            finish();
+                        }
+                    } else {
+                        showToast("Error updating password in Auth: " + task.getException().getMessage());
+                    }
+                });
     }
 
     private boolean isValidPassword(String password) {
-        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@.,;_]).{8,}$";
-        return Pattern.compile(passwordPattern).matcher(password).matches();
+        String pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@.,;_]).{8,}$";
+        return Pattern.compile(pattern).matcher(password).matches();
     }
 
-    private void togglePasswordVisibility(EditText editText, ImageView icon, boolean isNew) {
-        if (isNew) {
+    private void togglePasswordVisibility(EditText editText, ImageView icon, boolean isNewField) {
+        if (isNewField) {
             isNewPasswordVisible = !isNewPasswordVisible;
-            editText.setInputType(isNewPasswordVisible
-                    ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            icon.setImageResource(isNewPasswordVisible
-                    ? R.drawable.ic_visibilityoff_30
-                    : R.drawable.ic_visibility_30);
+            editText.setInputType(isNewPasswordVisible ?
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD :
+                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+            );
+            icon.setImageResource(isNewPasswordVisible ?
+                    R.drawable.ic_visibilityoff_30 :
+                    R.drawable.ic_visibility_30
+            );
         } else {
             isConfirmPasswordVisible = !isConfirmPasswordVisible;
-            editText.setInputType(isConfirmPasswordVisible
-                    ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            icon.setImageResource(isConfirmPasswordVisible
-                    ? R.drawable.ic_visibilityoff_30
-                    : R.drawable.ic_visibility_30);
+            editText.setInputType(isConfirmPasswordVisible ?
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD :
+                    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+            );
+            icon.setImageResource(isConfirmPasswordVisible ?
+                    R.drawable.ic_visibilityoff_30 :
+                    R.drawable.ic_visibility_30
+            );
         }
         editText.setSelection(editText.getText().length());
     }

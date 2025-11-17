@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:padding="28dp"
-    android:background="#FFFFFF">
+    android:background="#FFD966">
 
     <!-- 🔹 Logo -->
     <ImageView
@@ -23,7 +23,7 @@
         android:text="Email adresse"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="#FFD700"
         android:layout_marginBottom="6dp" />
 
     <!-- 🟢 Champ Email -->
@@ -35,8 +35,10 @@
         android:inputType="textEmailAddress"
         android:background="@drawable/edittext_background"
         android:padding="12dp"
-        android:textColor="#000000"
+        android:textColor="#14213D"
         android:textSize="15sp"
+        android:drawableStart="@drawable/ic_baseline_mail_24"
+        android:drawablePadding="8dp"
         android:layout_marginBottom="20dp" />
 
     <!-- 🟩 Label Numéro de téléphone -->
@@ -46,7 +48,7 @@
         android:text="Mobile phone"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="#333333"
+        android:textColor="#FFD700"
         android:layout_marginBottom="6dp" />
 
     <!-- 🟢 Champ Téléphone -->
@@ -58,8 +60,10 @@
         android:inputType="phone"
         android:background="@drawable/edittext_background"
         android:padding="12dp"
-        android:textColor="#000000"
+        android:textColor="#14213D"
         android:textSize="15sp"
+        android:drawableStart="@drawable/ic_baseline_phone_24"
+        android:drawablePadding="8dp"
         android:layout_marginBottom="30dp" />
 
     <!-- 🔘 Boutons -->
@@ -70,7 +74,6 @@
         android:weightSum="2"
         android:gravity="center">
 
-        <!-- 🔴 Bouton Annuler -->
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="0dp"
@@ -79,10 +82,9 @@
             android:text="Cancel"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:background="@drawable/btn_cancel_background"
+            android:background="@drawable/btn_cancel"
             android:layout_marginEnd="8dp" />
 
-        <!-- 🟢 Bouton Valider -->
         <Button
             android:id="@+id/buttonVerify"
             android:layout_width="0dp"
@@ -91,8 +93,9 @@
             android:text="Submit"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:background="@drawable/btn_validate_background"
+            android:background="@drawable/btn_submit"
             android:layout_marginStart="8dp" />
+
     </LinearLayout>
 
 </LinearLayout>

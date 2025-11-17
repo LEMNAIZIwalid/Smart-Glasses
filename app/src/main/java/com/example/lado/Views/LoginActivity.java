@@ -1,50 +1,68 @@
 package com.example.lado.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.lado.Controller.LoginController;
 import com.example.lado.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editUsername, editPassword;
+    private EditText editEmail, editPassword;
     private Button btnLogin;
-    private TextView textSignIn, textForgot; // 🔹 Lien vers Sign In & Forgot Password
-    private LoginController controller;
+    private TextView textSignUp, textForgot;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // 🔸 Liaison des vues XML
-        editUsername = findViewById(R.id.editUsername);
+        editEmail = findViewById(R.id.editUsername); // 🔸 Champ email (tu peux renommer dans XML)
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        textSignIn = findViewById(R.id.textSignIn);
-        textForgot = findViewById(R.id.textForgot); // 🔹 Nouveau lien "Forgot password?"
+        textSignUp = findViewById(R.id.textSignUp);
+        textForgot = findViewById(R.id.textForgot);
 
-        // 🔸 Initialisation du contrôleur
-        controller = new LoginController(this);
+        auth = FirebaseAuth.getInstance();
 
-        // 🟢 Action sur le bouton "Login"
-        btnLogin.setOnClickListener(v -> controller.verifierLogin(editUsername, editPassword));
+        btnLogin.setOnClickListener(v -> checkLogin());
+        textSignUp.setOnClickListener(v -> startActivity(new Intent(this, SignInActivity.class)));
+        textForgot.setOnClickListener(v -> Toast.makeText(this, "Fonction à venir", Toast.LENGTH_SHORT).show());
+    }
 
-        // 🟡 Action sur le texte "Sign In"
-        textSignIn.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
-            startActivity(intent);
-        });
+    private void checkLogin() {
+        String email = editEmail.getText().toString().trim();
+        String password = editPassword.getText().toString().trim();
 
-        // 🔴 Action sur le texte "Forgot password?"
-        textForgot.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, VerifyUserActivity.class);
-            startActivity(intent);
-        });
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                            prefs.edit().putString("userId", user.getUid()).apply();
+
+                            Toast.makeText(this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(this, HomeActivity.class));
+                            finish();
+                        }
+                    } else {
+                        Toast.makeText(this, "Email ou mot de passe incorrect ❌", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

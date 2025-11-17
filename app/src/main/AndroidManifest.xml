@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.lado">
+
+    <!-- 🌐 Permissions nécessaires -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 🔊 Bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- 📍 Localisation (nécessaire pour Bluetooth + GPS) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 🎥 Caméra (optionnelle pour éviter les erreurs sur TV) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <!-- 🎙️ Microphone (souvent utile pour commande vocale) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +34,7 @@
         android:theme="@style/Theme.LADO"
         tools:targetApi="31">
 
-        <!-- 🏁 Launch Activity -->
+        <!-- 🚀 Écran de démarrage -->
         <activity
             android:name=".Views.MainActivity"
             android:exported="true"
@@ -25,63 +46,70 @@
             </intent-filter>
         </activity>
 
-        <!-- 🔐 Login Page -->
+        <!-- 🔐 Page de connexion -->
         <activity
             android:name=".Views.LoginActivity"
             android:exported="false"
             android:label="Login"
             android:theme="@style/Theme.LADO" />
 
-        <!-- 🧾 Sign In Page -->
+        <!-- 🧾 Page d'inscription -->
         <activity
             android:name=".Views.SignInActivity"
             android:exported="false"
             android:label="Sign In"
             android:theme="@style/Theme.LADO" />
 
-        <!-- 🏠 Home Page -->
+        <!-- 🏠 Page d'accueil -->
         <activity
             android:name=".Views.HomeActivity"
             android:exported="false"
             android:label="Home"
             android:theme="@style/Theme.LADO" />
 
-        <!-- 🎥 Livestream Page -->
+        <!-- 🎥 Page de livestream -->
         <activity
             android:name=".Views.LivestreamActivity"
             android:exported="false"
             android:label="Livestream"
             android:theme="@style/Theme.LADO" />
 
-        <!-- 📊 Statistics Page -->
+        <!-- 📊 Page de statistiques -->
         <activity
             android:name=".Views.StaticsActivity"
             android:exported="false"
             android:label="Statistics"
             android:theme="@style/Theme.LADO" />
 
-        <!-- 🔔 Notifications Page -->
+        <!-- 🔔 Page des notifications -->
         <activity
             android:name=".Views.NotificationsActivity"
             android:exported="false"
             android:label="Notifications"
             android:theme="@style/Theme.LADO" />
 
-        <!-- 👤 Profile Page -->
+        <!-- 👤 Page de profil -->
         <activity
             android:name=".Views.ProfileActivity"
             android:exported="false"
             android:label="Profile"
             android:theme="@style/Theme.LADO" />
 
-        <!-- ✅ Verify User Page (for Forgot Password) -->
+        <!-- 🔄 Modifier profil -->
+        <activity
+            android:name=".Views.ModifyProfileActivity"
+            android:exported="false"
+            android:label="Modify Profile"
+            android:theme="@style/Theme.LADO" />
+
+        <!-- 🔑 Vérification utilisateur (mot de passe oublié) -->
         <activity
             android:name=".Views.VerifyUserActivity"
             android:exported="false"
             android:label="Verify User"
             android:theme="@style/Theme.LADO" />
 
-        <!-- ✅ Reset Password Page -->
+        <!-- 🔄 Réinitialisation du mot de passe -->
         <activity
             android:name=".Views.ResetPasswordActivity"
             android:exported="false"

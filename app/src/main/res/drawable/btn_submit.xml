@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#14213D" /> <!-- couleur du bouton Submit -->
+    <corners android:radius="12dp" /> <!-- coins arrondis -->
+</shape>

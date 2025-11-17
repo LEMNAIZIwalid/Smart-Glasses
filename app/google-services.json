@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1088712900291",
+    "firebase_url": "https://lado-smartglasses-default-rtdb.firebaseio.com",
+    "project_id": "lado-smartglasses",
+    "storage_bucket": "lado-smartglasses.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088712900291:android:6b7ff58354071583bdec76",
+        "android_client_info": {
+          "package_name": "com.example.lado"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpdrRWett2d5aZM5oqkPjkeRAJF_Scc48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

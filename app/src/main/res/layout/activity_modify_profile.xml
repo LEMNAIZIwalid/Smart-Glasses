@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffc40c">
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="12dp"
+                android:layout_margin="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:id="@+id/logoLado"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/lado_logo"
+                        android:contentDescription="Logo LADO"
+                        android:layout_marginBottom="24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Modify Profile"
+                        android:textColor="#14213D"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="24dp" />
+
+                    <EditText
+                        android:id="@+id/editUsername"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Username"
+                        android:textColor="#14213D"
+                        android:textColorHint="#fdee00"
+                        android:textSize="16sp"
+                        android:padding="12dp"
+                        android:drawablePadding="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:drawableStart="@drawable/ic_baseline_person_24"/>
+
+                    <EditText
+                        android:id="@+id/editEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Email"
+                        android:textColor="#14213D"
+                        android:textColorHint="#fdee00"
+                        android:textSize="16sp"
+                        android:padding="12dp"
+                        android:drawablePadding="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:drawableStart="@drawable/ic_baseline_mail_24"/>
+
+                    <EditText
+                        android:id="@+id/editPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Phone"
+                        android:textColor="#14213D"
+                        android:textColorHint="#fdee00"
+                        android:textSize="16sp"
+                        android:padding="12dp"
+                        android:drawablePadding="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:background="@drawable/rounded_edittext"
+                        android:drawableStart="@drawable/ic_baseline_phone_24"/>
+
+                    <Button
+                        android:id="@+id/btnSaveChanges"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="Save Changes"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:background="@drawable/btn_dark_style"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#14213D"
+        app:itemIconTint="@color/gold"
+        app:itemTextColor="@color/gold"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
