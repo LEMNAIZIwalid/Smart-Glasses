@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFD966">
+    android:background="#ffc40c">
 
     <!-- Logo LADO -->
     <ImageView
@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <!-- ScrollView pour le contenu -->
+    <!-- ScrollView -->
     <ScrollView
         android:id="@+id/scrollContent"
         android:layout_width="0dp"
@@ -34,55 +34,62 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 👋 Message de bienvenue -->
+            <!-- Message de bienvenue -->
             <TextView
                 android:id="@+id/textWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="👋 Bonjour Walid"
+                android:text="👋 Bonjour utilisateur"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#14213D"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- 🔋 Statut lunettes -->
+            <!-- Dernier obstacle détecté -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:background="#FFFFFF">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:padding="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔋 Batterie : 82%     📶 Connecté"
-                        android:textColor="#14213D"
+                        android:text="📌 Dernier obstacle détecté : "
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
-
+                        android:textColor="#14213D"/>
+                    <!-- Statut ESP32 -->
                     <TextView
+                        android:id="@+id/textESPStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dernière synchro : il y a 5 min"
+                        android:text="Connexion ESP32..."
+                        android:textSize="16sp"
                         android:textColor="#14213D"
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp"/>
+                        android:layout_marginBottom="16dp"/>
+
+
+                    <TextView
+                        android:id="@+id/textBattery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- m"
+                        android:textColor="#14213D"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 🔔 Dernières alertes -->
+            <!-- Capteurs en temps réel -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🔔 Dernières alertes"
+                android:text="📡 Capteurs en temps réel"
                 android:textColor="#14213D"
                 android:textStyle="bold"
                 android:textSize="18sp"
@@ -93,8 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                android:background="#FFFFFF">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -102,61 +108,144 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Ultrasonic -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="- Obstacle détecté à 2m droite (14:32)"
-                        android:textColor="#FF4D4F"
-                        android:textSize="15sp"
-                        android:layout_marginBottom="6dp"/>
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Distance : "
+                            android:textStyle="bold"
+                            android:textColor="#14213D"/>
+
+                        <TextView
+                            android:id="@+id/textUltrasonic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="-- cm"
+                            android:textColor="#14213D"/>
+                    </LinearLayout>
+
+                    <!-- Camera -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="- Batterie faible (hier 22:10)"
-                        android:textColor="#FF4D4F"
-                        android:textSize="15sp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
 
-            <!-- 💡 Astuce du jour -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                android:background="#FFFFFF">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Caméra : "
+                            android:textStyle="bold"
+                            android:textColor="#14213D"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                        <TextView
+                            android:id="@+id/textCamera"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#14213D"/>
+                    </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Current distance -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💡 Astuce du jour"
-                        android:textColor="#14213D"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:layout_marginBottom="6dp"/>
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
 
-                    <TextView
-                        android:id="@+id/textTip"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Current Distance : "
+                            android:textStyle="bold"
+                            android:textColor="#14213D"/>
+
+                        <TextView
+                            android:id="@+id/textCurrentDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#14213D"/>
+                    </LinearLayout>
+
+                    <!-- Current status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Évitez les reflets pour une meilleure détection."
-                        android:textColor="#14213D"
-                        android:textSize="15sp"/>
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Current Status : "
+                            android:textStyle="bold"
+                            android:textColor="#14213D"/>
+
+                        <TextView
+                            android:id="@+id/textCurrentStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#14213D"/>
+                    </LinearLayout>
+
+                    <!-- Timestamp -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Horodatage : "
+                            android:textStyle="bold"
+                            android:textColor="#14213D"/>
+
+                        <TextView
+                            android:id="@+id/textCurrentStamp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#14213D"/>
+                    </LinearLayout>
+
+                    <!-- Last Sync -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dernière synchronisation : "
+                            android:textStyle="bold"
+                            android:textColor="#14213D"/>
+
+                        <TextView
+                            android:id="@+id/textLastSync"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#14213D"/>
+                    </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- ✅ Bottom Navigation fixe en bas -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"

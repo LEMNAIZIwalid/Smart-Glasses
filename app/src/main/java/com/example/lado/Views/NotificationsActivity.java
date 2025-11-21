@@ -2,115 +2,112 @@ package com.example.lado.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lado.R;
+import com.example.lado.Models.NotificationModel;
+import com.example.lado.adapters.NotificationAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class NotificationsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerNotifications;
-    private SimpleNotificationAdapter adapter;
-    private final List<String> notificationsList = new ArrayList<>();
+    private NotificationAdapter adapter;
+    private final List<NotificationModel> notificationsList = new ArrayList<>();
+    private String uid;
+    private static final String TAG = "NotificationsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
-        // RecyclerView
         recyclerNotifications = findViewById(R.id.recyclerNotifications);
         recyclerNotifications.setLayoutManager(new LinearLayoutManager(this));
 
-        // Charger notifications
-        loadNotifications();
+        uid = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                .getString("userId", "");
 
-        adapter = new SimpleNotificationAdapter(notificationsList);
+        adapter = new NotificationAdapter(notificationsList);
         recyclerNotifications.setAdapter(adapter);
 
-        // BottomNavigationView
+        setupBottomNavigation();
+        if (uid != null && !uid.isEmpty()) {
+            loadNotificationsFromFirebase();
+        }
+    }
+
+    private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_notifications);
-
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.nav_historique) {
-                startActivity(new Intent(this, HomeActivity.class));
-                finish();
-                return true;
-            } else if (id == R.id.nav_livestream) {
-                startActivity(new Intent(this, LivestreamActivity.class));
-                finish();
-                return true;
-            } else if (id == R.id.nav_statics) {
-                startActivity(new Intent(this, StaticsActivity.class));
-                finish();
-                return true;
-            } else if (id == R.id.nav_profile) {
-                startActivity(new Intent(this, ProfileActivity.class));
+            Intent intent = null;
+
+            if (id == R.id.nav_historique) intent = new Intent(this, HomeActivity.class);
+            else if (id == R.id.nav_livestream) intent = new Intent(this, LivestreamActivity.class);
+            else if (id == R.id.nav_statics) intent = new Intent(this, StaticsActivity.class);
+            else if (id == R.id.nav_profile) intent = new Intent(this, ProfileActivity.class);
+
+            if (intent != null) {
+                startActivity(intent);
+                overridePendingTransition(0, 0);
                 finish();
                 return true;
             }
-            return false;
+            return id == R.id.nav_notifications;
         });
     }
 
-    private void loadNotifications() {
-        notificationsList.clear();
-        notificationsList.add("📶 GSM Sensor signal improved — 2m ago");
-        notificationsList.add("📡 GSM Module weak signal detected — 5m ago");
-        notificationsList.add("⚠️ Alert: High temperature detected! — 15m ago");
-        notificationsList.add("⚠️ Alert: Soil humidity too low! — 1h ago");
-        notificationsList.add("📡 GSM Antenna connection restored — 10m ago");
-    }
+    private void loadNotificationsFromFirebase() {
+        DatabaseReference notifRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(uid)
+                .child("notifications");
 
-    private static class SimpleNotificationAdapter extends RecyclerView.Adapter<SimpleNotificationAdapter.ViewHolder> {
+        notifRef.addValueEventListener(new ValueEventListener() { // listener continu
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                notificationsList.clear();
+                long now = System.currentTimeMillis();
 
-        private final List<String> notifications;
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    NotificationModel notif = ds.getValue(NotificationModel.class);
+                    if (notif != null) {
+                        // Supprimer si > 24h
+                        if (now - notif.getTimestamp() > 24 * 60 * 60 * 1000) {
+                            ds.getRef().removeValue();
+                        } else {
+                            notificationsList.add(notif);
+                        }
+                    }
+                }
 
-        SimpleNotificationAdapter(List<String> notifications) {
-            this.notifications = notifications;
-        }
+                // Trier par timestamp décroissant
+                Collections.sort(notificationsList, (a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
 
-        @Override
-        public ViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_notification, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            String notif = notifications.get(position);
-            String[] parts = notif.split("—");
-            String message = parts[0].trim();
-            String time = parts.length > 1 ? parts[1].trim() : "";
-            holder.textMessage.setText(message);
-            holder.textTime.setText(time);
-        }
-
-        @Override
-        public int getItemCount() {
-            return notifications.size();
-        }
-
-        static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView textMessage, textTime;
-
-            ViewHolder(View itemView) {
-                super(itemView);
-                textMessage = itemView.findViewById(R.id.textMessage);
-                textTime = itemView.findViewById(R.id.textTime);
+                adapter.notifyDataSetChanged();
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, "Erreur Firebase: " + error.getMessage());
+            }
+        });
     }
 }

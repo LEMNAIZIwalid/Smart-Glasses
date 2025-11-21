@@ -1,23 +1,32 @@
 package com.example.lado.Models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
     private String username;
     private String email;
     private String phone;
-    private String password;  // 🔹 ajouté
+    private Map<String, Object> sensors; // contient ultrasonic, camera, current
 
-    // Constructeur vide requis par Firebase
-    public User() {}
+    public User() {
+        sensors = new HashMap<>();
+        sensors.put("ultrasonic", new HashMap<String, Object>() {{ put("distance", ""); }});
+        sensors.put("camera", new HashMap<String, Object>() {{ put("status", ""); }});
+        sensors.put("current", new HashMap<String, Object>() {{
+            put("distance", "");
+            put("status", "");
+            put("stamp", "");
+        }});
+    }
 
-    // Constructeur avec mot de passe
-    public User(String username, String email, String password, String phone) {
+    public User(String username, String email, String phone) {
+        this();
         this.username = username;
         this.email = email;
-        this.password = password;
         this.phone = phone;
     }
 
-    // Getters et setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
@@ -27,6 +36,6 @@ public class User {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public Map<String, Object> getSensors() { return sensors; }
+    public void setSensors(Map<String, Object> sensors) { this.sensors = sensors; }
 }

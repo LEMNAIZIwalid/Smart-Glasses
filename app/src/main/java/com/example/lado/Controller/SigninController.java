@@ -21,7 +21,7 @@ public class SigninController {
     public SigninController(Activity activity) {
         this.activity = activity;
         this.auth = FirebaseAuth.getInstance();
-        this.usersRef = FirebaseDatabase.getInstance().getReference("Users");
+        this.usersRef = FirebaseDatabase.getInstance().getReference("users"); // 🔹 "users" avec minuscule
     }
 
     public void creerCompte(EditText usernameField, EditText emailField, EditText phoneField, EditText passwordField) {
@@ -43,24 +43,24 @@ public class SigninController {
                         if (firebaseUser != null) {
                             String userId = firebaseUser.getUid();
 
-                            // 🔹 Sauvegarde dans la base de données
-                            User user = new User(username, email, phone, password);
+                            // 🔹 Sauvegarde dans la base de données SANS stocker le mot de passe
+                            User user = new User(username, email, phone);
                             usersRef.child(userId).setValue(user)
                                     .addOnCompleteListener(saveTask -> {
                                         if (saveTask.isSuccessful()) {
-                                            Toast.makeText(activity, "Compte créé avec succès", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(activity, "Compte créé avec succès ✅", Toast.LENGTH_SHORT).show();
 
                                             // 🔹 Redirection vers la page de connexion
                                             Intent intent = new Intent(activity, LoginActivity.class);
                                             activity.startActivity(intent);
                                             activity.finish();
                                         } else {
-                                            Toast.makeText(activity, "Erreur lors de la sauvegarde", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(activity, "Erreur lors de la sauvegarde : " + saveTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
                     } else {
-                        Toast.makeText(activity, "Erreur : " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, "Erreur Auth : " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }

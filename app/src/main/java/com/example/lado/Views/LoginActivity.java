@@ -1,7 +1,6 @@
 package com.example.lado.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editEmail = findViewById(R.id.editUsername); // 🔸 Champ email (tu peux renommer dans XML)
+        editEmail = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
         textSignUp = findViewById(R.id.textSignUp);
@@ -35,29 +34,37 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         btnLogin.setOnClickListener(v -> checkLogin());
-        textSignUp.setOnClickListener(v -> startActivity(new Intent(this, SignInActivity.class)));
-        textForgot.setOnClickListener(v -> Toast.makeText(this, "Fonction à venir", Toast.LENGTH_SHORT).show());
+
+        textSignUp.setOnClickListener(v ->
+                startActivity(new Intent(LoginActivity.this, SignInActivity.class))
+        );
+
+        textForgot.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, VerifyUserActivity.class));
+        });
     }
 
-    private void checkLogin() {
+    private void checkLogin(){
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
+        if(email.isEmpty() || password.isEmpty()){
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
             return;
         }
 
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if(task.isSuccessful()){
                         FirebaseUser user = auth.getCurrentUser();
-                        if (user != null) {
+                        if(user != null){
+                            // 🔹 Sauvegarde UID pour microcontrôleur
                             SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                             prefs.edit().putString("userId", user.getUid()).apply();
 
                             Toast.makeText(this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(this, HomeActivity.class));
+
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             finish();
                         }
                     } else {

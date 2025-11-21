@@ -39,7 +39,7 @@ public class SignInActivity extends AppCompatActivity {
         textGoLogin = findViewById(R.id.textGoLogin);
 
         auth = FirebaseAuth.getInstance();
-        dbRef = FirebaseDatabase.getInstance().getReference("users"); // ✅ unifié
+        dbRef = FirebaseDatabase.getInstance().getReference("users");
 
         textGoLogin.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
         btnSignUp.setOnClickListener(v -> registerUser());
@@ -63,14 +63,13 @@ public class SignInActivity extends AppCompatActivity {
             return;
         }
 
-        // 🔹 Création du compte Firebase Auth
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if(task.isSuccessful()){
                         FirebaseUser firebaseUser = auth.getCurrentUser();
-                        if (firebaseUser != null) {
+                        if(firebaseUser != null){
                             String uid = firebaseUser.getUid();
-                            User user = new User(username, email, password, phone);
+                            User user = new User(username, email, phone);
 
                             dbRef.child(uid).setValue(user)
                                     .addOnSuccessListener(aVoid -> {
@@ -80,10 +79,10 @@ public class SignInActivity extends AppCompatActivity {
                                         finish();
                                     })
                                     .addOnFailureListener(e ->
-                                            Toast.makeText(this, "Erreur DB : " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                            Toast.makeText(this, "Erreur DB : "+e.getMessage(), Toast.LENGTH_SHORT).show());
                         }
                     } else {
-                        Toast.makeText(this, "Erreur Auth : " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Erreur Auth : "+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

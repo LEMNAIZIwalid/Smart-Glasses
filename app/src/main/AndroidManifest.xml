@@ -3,27 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.lado">
 
-    <!-- 🌐 Permissions nécessaires -->
+    <!-- 🌐 Permissions réseau -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- 🔊 Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Permissions Bluetooth Android 12+ -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
     <!-- 📍 Localisation (nécessaire pour Bluetooth + GPS) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- 🎥 Caméra (optionnelle pour éviter les erreurs sur TV) -->
+    <!-- 🎥 Caméra (optionnelle pour TV) -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
-    <!-- 🎙️ Microphone (souvent utile pour commande vocale) -->
+    <!-- 🎙️ Microphone -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <application
+        android:name=".Utils.NotificationBannerContext"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -32,6 +36,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LADO"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <!-- 🚀 Écran de démarrage -->
@@ -46,75 +51,17 @@
             </intent-filter>
         </activity>
 
-        <!-- 🔐 Page de connexion -->
-        <activity
-            android:name=".Views.LoginActivity"
-            android:exported="false"
-            android:label="Login"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🧾 Page d'inscription -->
-        <activity
-            android:name=".Views.SignInActivity"
-            android:exported="false"
-            android:label="Sign In"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🏠 Page d'accueil -->
-        <activity
-            android:name=".Views.HomeActivity"
-            android:exported="false"
-            android:label="Home"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🎥 Page de livestream -->
-        <activity
-            android:name=".Views.LivestreamActivity"
-            android:exported="false"
-            android:label="Livestream"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 📊 Page de statistiques -->
-        <activity
-            android:name=".Views.StaticsActivity"
-            android:exported="false"
-            android:label="Statistics"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🔔 Page des notifications -->
-        <activity
-            android:name=".Views.NotificationsActivity"
-            android:exported="false"
-            android:label="Notifications"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 👤 Page de profil -->
-        <activity
-            android:name=".Views.ProfileActivity"
-            android:exported="false"
-            android:label="Profile"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🔄 Modifier profil -->
-        <activity
-            android:name=".Views.ModifyProfileActivity"
-            android:exported="false"
-            android:label="Modify Profile"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🔑 Vérification utilisateur (mot de passe oublié) -->
-        <activity
-            android:name=".Views.VerifyUserActivity"
-            android:exported="false"
-            android:label="Verify User"
-            android:theme="@style/Theme.LADO" />
-
-        <!-- 🔄 Réinitialisation du mot de passe -->
-        <activity
-            android:name=".Views.ResetPasswordActivity"
-            android:exported="false"
-            android:label="Reset Password"
-            android:theme="@style/Theme.LADO" />
+        <!-- 🔐 Pages de l'application -->
+        <activity android:name=".Views.LoginActivity" android:exported="false" android:label="Login" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.SignInActivity" android:exported="false" android:label="Sign In" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.HomeActivity" android:exported="false" android:label="Home" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.LivestreamActivity" android:exported="false" android:label="Livestream" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.StaticsActivity" android:exported="false" android:label="Statistics" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.NotificationsActivity" android:exported="false" android:label="Notifications" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.ProfileActivity" android:exported="false" android:label="Profile" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.ModifyProfileActivity" android:exported="false" android:label="Modify Profile" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.VerifyUserActivity" android:exported="false" android:label="Verify User" android:theme="@style/Theme.LADO" />
+        <activity android:name=".Views.ResetPasswordActivity" android:exported="false" android:label="Reset Password" android:theme="@style/Theme.LADO" />
 
     </application>
 
