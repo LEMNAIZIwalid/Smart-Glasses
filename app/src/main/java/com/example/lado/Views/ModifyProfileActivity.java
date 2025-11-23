@@ -10,10 +10,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.lado.Models.User;
 import com.example.lado.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModifyProfileActivity extends AppCompatActivity {
 
@@ -27,18 +33,22 @@ public class ModifyProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_profile);
 
+        // 🔹 Liaison UI
         editUsername = findViewById(R.id.editUsername);
         editEmail = findViewById(R.id.editEmail);
         editPhone = findViewById(R.id.editPhone);
         btnSaveChanges = findViewById(R.id.btnSaveChanges);
 
-        usersRef = FirebaseDatabase.getInstance().getReference("users"); // ✅ minuscule
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = prefs.getString("userId", null);
 
-        if (userId != null) loadUserData(userId);
-        else Toast.makeText(this, "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
+        if (userId != null) {
+            loadUserData(userId);
+        } else {
+            Toast.makeText(this, "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
+        }
 
         btnSaveChanges.setOnClickListener(v -> updateUserData());
 
@@ -50,11 +60,17 @@ public class ModifyProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user != null) {
-                        editUsername.setText(user.getUsername());
-                        editEmail.setText(user.getEmail());
-                        editPhone.setText(user.getPhone());
+                    // 🔹 Charger via Map pour éviter crash avec notifications/sensors
+                    try {
+                        Map<String, Object> userMap = (Map<String, Object>) snapshot.getValue();
+                        if (userMap != null) {
+                            editUsername.setText(userMap.get("username") != null ? userMap.get("username").toString() : "");
+                            editEmail.setText(userMap.get("email") != null ? userMap.get("email").toString() : "");
+                            editPhone.setText(userMap.get("phone") != null ? userMap.get("phone").toString() : "");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(ModifyProfileActivity.this, "Erreur lors du chargement des données", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(ModifyProfileActivity.this, "Utilisateur introuvable", Toast.LENGTH_SHORT).show();
@@ -80,9 +96,13 @@ public class ModifyProfileActivity extends AppCompatActivity {
             return;
         }
 
-        usersRef.child(userId).child("username").setValue(username);
-        usersRef.child(userId).child("email").setValue(email);
-        usersRef.child(userId).child("phone").setValue(phone)
+        // 🔹 Mise à jour Firebase avec HashMap
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("username", username);
+        updates.put("email", email);
+        updates.put("phone", phone);
+
+        usersRef.child(userId).updateChildren(updates)
                 .addOnSuccessListener(unused ->
                         Toast.makeText(this, "Profil mis à jour avec succès ✅", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e ->

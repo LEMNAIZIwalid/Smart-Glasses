@@ -19,13 +19,13 @@
             android:src="@drawable/lado_logo"
             android:contentDescription="Logo LADO"
             android:layout_marginBottom="24dp"
-            android:background="@null" /> <!-- Supprime le fond blanc du logo -->
+            android:background="@null" />
 
         <!-- Titre -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign in"
+            android:text="Sign Up"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#14213D"

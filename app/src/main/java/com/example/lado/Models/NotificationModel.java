@@ -4,7 +4,7 @@ public class NotificationModel {
     private String message;
     private long timestamp;
 
-    public NotificationModel() {} // Firebase nécessite un constructeur vide
+    public NotificationModel() {}
 
     public NotificationModel(String message, long timestamp) {
         this.message = message;

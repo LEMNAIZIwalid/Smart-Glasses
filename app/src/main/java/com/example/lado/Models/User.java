@@ -1,41 +1,40 @@
 package com.example.lado.Models;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class User {
+
     private String username;
     private String email;
     private String phone;
-    private Map<String, Object> sensors; // contient ultrasonic, camera, current
+    private String profile_image;
 
-    public User() {
-        sensors = new HashMap<>();
-        sensors.put("ultrasonic", new HashMap<String, Object>() {{ put("distance", ""); }});
-        sensors.put("camera", new HashMap<String, Object>() {{ put("status", ""); }});
-        sensors.put("current", new HashMap<String, Object>() {{
-            put("distance", "");
-            put("status", "");
-            put("stamp", "");
-        }});
-    }
+    // ⚡ sensors et notifications sont des Maps pour Firebase
+    private Map<String, Object> sensors;
+    private Map<String, Object> notifications;
 
-    public User(String username, String email, String phone) {
-        this();
+    public User() { }
+
+    public User(String username, String email, String phone, String profile_image) {
         this.username = username;
         this.email = email;
         this.phone = phone;
+        this.profile_image = profile_image;
     }
 
+    // ----- Getters -----
     public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
     public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-
+    public String getProfile_image() { return profile_image; }
     public Map<String, Object> getSensors() { return sensors; }
+    public Map<String, Object> getNotifications() { return notifications; }
+
+    // ----- Setters -----
+    public void setUsername(String username) { this.username = username; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setProfile_image(String profile_image) { this.profile_image = profile_image; }
     public void setSensors(Map<String, Object> sensors) { this.sensors = sensors; }
+    public void setNotifications(Map<String, Object> notifications) { this.notifications = notifications; }
 }

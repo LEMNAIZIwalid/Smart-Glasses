@@ -6,34 +6,51 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lado.Models.NotificationModel;
 import com.example.lado.R;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Locale;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
-    private final List<NotificationModel> notifications;
+    private List<NotificationModel> notifications = new ArrayList<>();
 
-    public NotificationAdapter(List<NotificationModel> notifications) {
-        this.notifications = notifications;
+    public void setNotifications(List<NotificationModel> newNotifications) {
+        DiffUtil.DiffResult diffResult =
+                DiffUtil.calculateDiff(new NotificationDiffCallback(this.notifications, newNotifications));
+
+        this.notifications.clear();
+        this.notifications.addAll(newNotifications);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_notification, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NotificationModel notif = notifications.get(position);
+
+        // MESSAGE
         holder.textMessage.setText(notif.getMessage());
-        holder.textTime.setText(getTimeAgo(notif.getTimestamp()));
+
+        // TIMESTAMP FORMATÉ
+        String dateStr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+                .format(new Date(notif.getTimestamp()));
+        holder.textTimestamp.setText(dateStr);
     }
 
     @Override
@@ -41,25 +58,55 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return notifications.size();
     }
 
+    // ---------------------- ViewHolder ----------------------
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textMessage, textTime;
+        TextView textMessage, textTimestamp;
 
-        ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textMessage = itemView.findViewById(R.id.textMessage);
-            textTime = itemView.findViewById(R.id.textTime);
+            textTimestamp = itemView.findViewById(R.id.textTimestamp);
         }
     }
 
-    private String getTimeAgo(long timestamp) {
-        long diff = System.currentTimeMillis() - timestamp;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
-        long hours = TimeUnit.MILLISECONDS.toHours(diff);
-        long days = TimeUnit.MILLISECONDS.toDays(diff);
+    // ---------------------- DiffUtil Callback ----------------------
+    private static class NotificationDiffCallback extends DiffUtil.Callback {
 
-        if (minutes < 1) return "À l'instant";
-        else if (minutes < 60) return "il y a " + minutes + " min";
-        else if (hours < 24) return "il y a " + hours + " h";
-        else return "il y a " + days + " j";
+        private final List<NotificationModel> oldList;
+        private final List<NotificationModel> newList;
+
+        public NotificationDiffCallback(List<NotificationModel> oldList, List<NotificationModel> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            NotificationModel oldItem = oldList.get(oldItemPosition);
+            NotificationModel newItem = newList.get(newItemPosition);
+
+            // Identifiant unique = message + timestamp
+            return oldItem.getMessage().equals(newItem.getMessage())
+                    && oldItem.getTimestamp() == newItem.getTimestamp();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            NotificationModel oldItem = oldList.get(oldItemPosition);
+            NotificationModel newItem = newList.get(newItemPosition);
+
+            return oldItem.getMessage().equals(newItem.getMessage())
+                    && oldItem.getTimestamp() == newItem.getTimestamp();
+        }
     }
 }

@@ -46,14 +46,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/edittext_background"
-                android:hint="Username"
+                android:hint="Mail"
                 android:textColor="#14213D"
                 android:textColorHint="#fdee00"
                 android:textSize="16sp"
                 android:padding="12dp"
                 android:drawablePadding="8dp"
                 android:layout_marginBottom="16dp"
-                android:drawableStart="@drawable/ic_baseline_person_24" />
+                android:drawableStart="@drawable/ic_baseline_mail_24" />
 
             <EditText
                 android:id="@+id/editPassword"

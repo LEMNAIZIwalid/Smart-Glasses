@@ -1,0 +1,16 @@
+// Top-level build file
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:perf-plugin:2.0.2'
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

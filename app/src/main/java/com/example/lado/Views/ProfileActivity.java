@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.lado.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,10 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
+
     private ImageView imageProfile, btnChangePhoto;
     private Uri imageUri;
     private TextView textUsername;
-
     private Button btnModifyProfile, btnChangePassword, btnLogout;
 
     private DatabaseReference usersRef;
@@ -43,59 +44,31 @@ public class ProfileActivity extends AppCompatActivity {
         // 🔹 Initialisation des vues
         imageProfile = findViewById(R.id.imageProfile);
         btnChangePhoto = findViewById(R.id.btnChangePhoto);
-        textUsername = findViewById(R.id.textUsername); // TextView pour le username
+        textUsername = findViewById(R.id.textUsername);
         btnModifyProfile = findViewById(R.id.btnModifyProfile);
         btnChangePassword = findViewById(R.id.btnChangePassword);
         btnLogout = findViewById(R.id.btnLogout);
 
-        // 🔹 Référence DB corrigée (minuscule)
         usersRef = FirebaseDatabase.getInstance().getReference("users");
-
-        // 🔹 Récupérer UID depuis SharedPreferences
         userId = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("userId", null);
 
         if (userId != null) {
-            loadUsername(userId);
+            loadUserData(userId);
         } else {
             Toast.makeText(this, "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
-        }
-
-        // 🔹 Charger l'image sauvegardée
-        String savedUri = getSharedPreferences("PROFILE_PREF", MODE_PRIVATE)
-                .getString("profile_image_uri", null);
-        if (savedUri != null) {
-            Glide.with(this)
-                    .load(Uri.parse(savedUri))
-                    .circleCrop()
-                    .into(imageProfile);
-        }
-
-        // 🔹 Fallback : username local
-        String savedUsername = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-                .getString("username", null);
-        if (savedUsername != null) {
-            textUsername.setText(savedUsername);
         }
 
         // 🔹 Modifier la photo
         btnChangePhoto.setOnClickListener(v -> openImageChooser());
 
-        // 🔹 Aller vers ModifyProfileActivity
-        btnModifyProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ModifyProfileActivity.class);
-            startActivity(intent);
-        });
+        // 🔹 Boutons profil et mot de passe
+        btnModifyProfile.setOnClickListener(v -> startActivity(new Intent(this, ModifyProfileActivity.class)));
+        btnChangePassword.setOnClickListener(v -> startActivity(new Intent(this, ResetPasswordActivity.class)));
 
-        // 🔹 Aller vers ResetPasswordActivity
-        btnChangePassword.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ResetPasswordActivity.class);
-            startActivity(intent);
-        });
-
-        // 🔹 Pop-up déconnexion
+        // 🔹 Déconnexion
         btnLogout.setOnClickListener(v -> showLogoutDialog());
 
-        // 🔹 Navigation
+        // 🔹 Navigation Bottom
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_profile);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -119,29 +92,37 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    // 🔹 Charger le username depuis Firebase
-    private void loadUsername(String uid) {
-        usersRef.child(uid).child("username")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        String username = snapshot.getValue(String.class);
-                        if (username != null) {
-                            textUsername.setText(username);
+    // 🔹 Charger username et image depuis Firebase
+    private void loadUserData(String uid) {
+        usersRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String username = snapshot.child("username").getValue(String.class);
+                    String profileUrl = snapshot.child("profileImageUrl").getValue(String.class);
 
-                            // 🔹 Sauvegarde locale pour affichage rapide
-                            getSharedPreferences("UserPrefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("username", username)
-                                    .apply();
-                        }
+                    if (username != null) {
+                        textUsername.setText(username);
+                        getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                                .edit()
+                                .putString("username", username)
+                                .apply();
                     }
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        Toast.makeText(ProfileActivity.this, "Erreur DB : " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (profileUrl != null && !profileUrl.isEmpty()) {
+                        Glide.with(ProfileActivity.this)
+                                .load(Uri.parse(profileUrl))
+                                .circleCrop()
+                                .into(imageProfile);
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(ProfileActivity.this, "Erreur DB : " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // 🔹 Sélecteur d'image
@@ -158,10 +139,20 @@ public class ProfileActivity extends AppCompatActivity {
             imageUri = data.getData();
             try {
                 Glide.with(this).load(imageUri).circleCrop().into(imageProfile);
+
+                // 🔹 Sauvegarde locale
                 getSharedPreferences("PROFILE_PREF", MODE_PRIVATE)
                         .edit()
                         .putString("profile_image_uri", imageUri.toString())
                         .apply();
+
+                // 🔹 Mise à jour Firebase
+                if (userId != null) {
+                    usersRef.child(userId).child("profileImageUrl").setValue(imageUri.toString())
+                            .addOnSuccessListener(aVoid -> Toast.makeText(this, "Photo de profil mise à jour ✅", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(this, "Erreur DB : " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Erreur lors du chargement de l’image", Toast.LENGTH_SHORT).show();
@@ -174,6 +165,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .setTitle("Déconnexion")
                 .setMessage("Voulez-vous vraiment vous déconnecter ?")
                 .setPositiveButton("Oui", (dialog, which) -> {
+                    FirebaseAuth.getInstance().signOut();
                     Intent intent = new Intent(this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

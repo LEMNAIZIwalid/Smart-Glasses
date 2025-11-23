@@ -17,7 +17,7 @@ public class GlobalNotificationService extends Service {
                 .getString("userId", null);
 
         if (uid != null && !uid.isEmpty()) {
-            firebaseService = new FirebaseService(uid);
+            firebaseService = new FirebaseService(getApplicationContext(), uid);
             firebaseService.startListening();
             Log.d(TAG, "FirebaseService started for UID: " + uid);
         } else {
@@ -27,12 +27,11 @@ public class GlobalNotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Si le service est tué, redémarrer
         return START_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null; // Pas de binding
+        return null;
     }
 }
